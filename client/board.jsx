@@ -2,14 +2,21 @@ import React from 'react';
 import BoardPosition from './boardPosition.jsx';
 
 function Board(props){
+	const {board, handleClick} = props;
 
 	var boardRows = [];
-	for(var i = 0; i < 3; i++){
-		boardRows.push(<BoardPosition reset={props.reset} winner={props.winner} position={[props.rowNum, i]} playerXTurn={props.playerXTurn} handleTurnAssignment={props.handleTurnAssignment} />)
+	for(var row = 0; row < board.length; row++){
+		let boardRow = (
+			<ul>
+				{board[row].map((value, idx) => <BoardPosition position={[row, idx]} value={value} handleClick={handleClick} />)}
+			</ul>
+		)
+	
+		boardRows.push(boardRow);
 	}
 
 	return (
-		<ul>{boardRows}</ul>
+		<div>{boardRows}</div>
 	)
 }
 

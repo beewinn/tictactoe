@@ -1,51 +1,19 @@
 import React from 'react';
 
-class BoardPosition extends React.Component {
-	constructor(props){
-		super(props);
-		this.state = {
-			toggled: false,
-			value: '',
-			row_position: this.props.position
-		}
 
+function BoardPosition(props){
+	const {position, value, handleClick} = props;
+    
+    let symbol = '';
+    if (value === -1 ) {
+    	symbol = 'O';
+    } else if (value === 1) {
+    	symbol = 'X';
+    }
 
-		this.handleClick = (e) => {
-
-			e.preventDefault();
-			var player;
-			if(this.state.toggled === false && this.props.winner === undefined){
-			   if(this.props.playerXTurn === true){
-				   player = 'X'
-			   } else {
-				   player = 'O';
-			   }
-			   this.props.handleTurnAssignment(this.state.row_position);
-   
-			   this.setState({
-				   value: player,
-				   toggled: true
-			   });
-
-			}
-
-		}
-	}
-
-	render() {
-
-		if(this.props.refresh === true){
-			console.log("in button to refresh",this.props.refresh);
-			this.setState({
-				toggled: false,
-				value: '',
-				row_position: this.props.position
-			})
-		}
-
-    	return ( <li className="position" onClick={(e) => this.handleClick(e)}> {this.state.value} </li> )
-  	}
-
+    return (
+    	<li className="position" onClick={() => handleClick(position)}> {symbol} </li>
+    )	
 }
 
 export default BoardPosition;

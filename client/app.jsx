@@ -6,47 +6,42 @@ class App extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			playerXTurn: true,
-			displayPlayer: 'X',
+			activePlayer: 'X',
 			winner: undefined,
 			board: [
 				[0, 0, 0],
 				[0, 0, 0],
 				[0, 0, 0]
 			],
-			reset: false
 		}
 
 		this.checkStraightWins = this.checkStraightWins.bind(this);
 		this.checkDiagonalWins = this.checkDiagonalWins.bind(this);
 
-		// this.handleRefreshClick = (e) => {
-		// 	e.preventDefault();
-		// 	console.log("click is happening..")
-		// 	// this.handleBtnRefresh();
+		this.handleRefreshClick = () => {
+			this.setState({
+			    activePlayer: 'X',
+			    winner: undefined,
+			    board: [
+				    [0, 0, 0],
+				    [0, 0, 0],
+				    [0, 0, 0]
+			    ]
+			})
+		}
 
-		// 	this.setState({
-		// 		playerXTurn: true,
-		// 	    displayPlayer: 'X',
-		// 	    winner: undefined,
-		// 	    board: [
-		// 		    [0, 0, 0],
-		// 		    [0, 0, 0],
-		// 		    [0, 0, 0]
-		// 	    ],
-		// 	    reset: true
-		// 	})
-		// }
+		this.handleClick = (position) => {
+			if (this.state.board[position[0]][position[1]] !== 0) {
+				return;
+			}
 
-		// // this.handleBtnRefresh = () => {
-		// // 	this.setState({
-		// // 	    reset: true
-		// // 	})
-		// // }
+			if (this.state.winner !== undefined) {
+				return;
+			}
 
-		this.handleTurnAssignment = (position) => {
+
 			var player;
-			if(this.state.playerXTurn === true){
+			if(this.state.activePlayer === 'X'){
 				player = 'O';
 			} else {
 				player = 'X';
@@ -55,8 +50,7 @@ class App extends React.Component {
 			var gameUpdates = this.updateBoardStatus(position);
 
 			this.setState({
-				displayPlayer: player,
-				playerXTurn: !this.state.playerXTurn,
+				activePlayer: player,
 				board: gameUpdates['board'],
 			 	winner: gameUpdates['winner']
 			})
@@ -68,7 +62,7 @@ class App extends React.Component {
 			row = position[0];
 			col = position[1];
 
-			if(this.state.playerXTurn === true){
+			if(this.state.activePlayer === 'X'){
 				currentBoard[row][col] = 1;
 			} else {
 				currentBoard[row][col] = -1;
@@ -76,7 +70,7 @@ class App extends React.Component {
 			//check for wins
 			var winner = undefined;
 			if(this.checkForWins(currentBoard)){
-				winner = this.state.displayPlayer;
+				winner = this.state.activePlayer;
 			}
 
 			return {board: currentBoard, winner: winner}
@@ -144,16 +138,14 @@ class App extends React.Component {
     	return (
     		<div>
     			<h1>Tic Tac Toe</h1>
-    			<p>Player Turn: {this.state.displayPlayer} </p>
+    			<p>Player Turn: {this.state.activePlayer} </p>
     			<p> Winner: {this.state.winner}</p>
-	    		<Board reset={this.state.reset} winner={this.state.winner} playerXTurn={this.state.playerXTurn} handleTurnAssignment={this.handleTurnAssignment} rowNum={0}/>
-	    		<Board reset={this.state.reset} winner={this.state.winner} playerXTurn={this.state.playerXTurn} handleTurnAssignment={this.handleTurnAssignment} rowNum={1}/>
-	    		<Board reset={this.state.reset} winner={this.state.winner} playerXTurn={this.state.playerXTurn} handleTurnAssignment={this.handleTurnAssignment} rowNum={2}/>
+    			<button onClick={() => this.handleRefreshClick()}>Refresh Game</button>
+	    		<Board board={this.state.board} handleClick={this.handleClick}/>
     		</div> 
     	)
   	}
 
 }
-//<button onClick={(e) => this.handleRefreshClick(e)}> Refresh Game</button>
 
 export default App;
